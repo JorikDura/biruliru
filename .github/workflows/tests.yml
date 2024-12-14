@@ -56,6 +56,8 @@ jobs:
       - name: Run test unit
         run: |
           ./vendor/bin/pest --parallel --ci --coverage --min=100.0
+        env:
+          DB_DATABASE: cicd_testing
 
     services:
       pgsql:
