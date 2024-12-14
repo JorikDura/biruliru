@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 
 final class AppServiceProvider extends ServiceProvider
@@ -21,6 +26,50 @@ final class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        $this->configureModels();
+        $this->configureCommands();
+        $this->bindUserLink();
+    }
+
+    /**
+     * Configures models
+     * They should be strict
+     *
+     * @return void
+     */
+    public function configureModels(): void
+    {
+        Model::shouldBeStrict();
+    }
+
+    /**
+     * Configures commands
+     *
+     * @return void
+     */
+    public function configureCommands(): void
+    {
+        DB::prohibitDestructiveCommands(app()->isProduction());
+    }
+
+    /**
+     * New route binding for App\Models\User model
+     * using "custom_link" or "id"
+     *
+     * @return void
+     */
+    public function bindUserLink(): void
+    {
+        Route::bind('user', function (string $value): User {
+            return User::when(
+                value: is_numeric($value),
+                callback: static function (Builder $query) use ($value) {
+                    $query->where('id', $value);
+                },
+                default: static function (Builder $query) use ($value) {
+                    $query->where('custom_link', $value);
+                }
+            )->firstOrFail();
+        });
     }
 }

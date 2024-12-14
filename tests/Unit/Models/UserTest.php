@@ -13,6 +13,7 @@ it('user model to array', function () {
         'name',
         'email',
         'email_verified_at',
+        'custom_link',
         'created_at',
         'updated_at'
     ]);
