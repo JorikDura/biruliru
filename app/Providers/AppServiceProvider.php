@@ -65,11 +65,8 @@ final class AppServiceProvider extends ServiceProvider
                 value: is_numeric($value),
                 callback: static function (Builder $query) use ($value) {
                     $query->where('id', $value);
-                },
-                default: static function (Builder $query) use ($value) {
-                    $query->where('custom_link', $value);
                 }
-            )->firstOrFail();
+            )->orWhere('custom_link', $value)->firstOrFail();
         });
     }
 }

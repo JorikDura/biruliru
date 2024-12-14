@@ -66,4 +66,24 @@ describe('user api endpoints', function () {
                 'name' => $user->name
             ]);
     });
+
+    it('get user by numeric custom link', function () {
+        /** @var User $user */
+        $user = User::factory()->create([
+            'custom_link' => $number = fake()->numberBetween(432, 956)
+        ]);
+
+        getJson(uri: "api/v1/users/$number")
+            ->assertSuccessful()
+            ->assertJsonStructure([
+                'data' => [
+                    'id',
+                    'name'
+                ]
+            ])
+            ->assertSee([
+                'id' => $user->id,
+                'name' => $user->name
+            ]);
+    });
 });
