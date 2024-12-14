@@ -39,9 +39,23 @@ jobs:
         run: |
           composer install --no-interaction
 
-      - name: Run tests
+      - name: Run test suite
         run: |
-          composer test
+          ./vendor/bin/pest
+        env:
+          DB_DATABASE: cicd_testing
+
+      - name: Run Larastan
+        run: |
+          ./vendor/bin/phpstan analyse
+
+      - name: Run Pint
+        run: |
+          ./vendor/bin/pint --test
+
+      - name: Run test unit
+        run: |
+          ./vendor/bin/pest --parallel --ci --coverage --min=100.0
 
     services:
       pgsql:
