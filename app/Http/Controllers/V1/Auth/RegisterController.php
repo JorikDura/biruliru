@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\V1\Auth;
 
-use App\Actions\V1\Auth\RegisterAction;
 use App\Actions\V1\Auth\CreateTokenAction;
-use App\Http\Requests\RegisterRequest;
+use App\Actions\V1\Auth\RegisterAction;
+use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Resources\TokenResource;
 
 final class RegisterController

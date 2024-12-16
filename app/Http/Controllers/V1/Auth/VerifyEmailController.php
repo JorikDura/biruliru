@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\V1\Auth;
 
 use App\Actions\V1\Auth\VerifyEmailAction;
-use App\Http\Requests\VerifyEmailRequest;
+use App\Http\Requests\Auth\VerifyEmailRequest;
 use App\Models\User;
 use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Http\Response;
