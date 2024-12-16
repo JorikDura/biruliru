@@ -30,7 +30,8 @@ final class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
-        'custom_link'
+        'custom_link',
+        'gender'
     ];
 
     /**
@@ -46,6 +47,26 @@ final class User extends Authenticatable implements MustVerifyEmail
     public function sendEmailVerificationNotification(): void
     {
         $this->notify(new VerificationCodeNotification());
+    }
+
+    /**
+     * Checks is user an admin
+     *
+     * @return bool
+     */
+    public function isAdmin(): bool
+    {
+        return $this->role === UserRole::ADMIN;
+    }
+
+    /**
+     * Checks is user a moderator
+     *
+     * @return bool
+     */
+    public function isModerator(): bool
+    {
+        return $this->role === UserRole::MODERATOR;
     }
 
     /**

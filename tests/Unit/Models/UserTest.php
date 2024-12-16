@@ -12,6 +12,8 @@ it('user model to array', function () {
         'id',
         'name',
         'email',
+        'role',
+        'gender',
         'email_verified_at',
         'custom_link',
         'created_at',
