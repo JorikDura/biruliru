@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
+use App\Enums\Gender;
+use App\Enums\UserRole;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
@@ -30,6 +32,8 @@ final class UserFactory extends Factory
             'name' => $name = fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
+            'gender' => Gender::UNDEFINED,
+            'role' => UserRole::USER,
             'password' => self::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
             'custom_link' => Str::of($name)->replace([' '], '+'),

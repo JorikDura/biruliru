@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Enums\Gender;
+use App\Enums\UserRole;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -16,6 +18,10 @@ return new class extends Migration {
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
+            $table->enum('role', array_column(UserRole::cases(), 'value'))
+                ->default(UserRole::USER);
+            $table->enum('gender', array_column(Gender::cases(), 'value'))
+                ->default(Gender::UNDEFINED);
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('custom_link')->nullable()->unique();
