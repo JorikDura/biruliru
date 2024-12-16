@@ -21,7 +21,7 @@ return new class extends Migration {
             $table->enum('role', array_column(UserRole::cases(), 'value'))
                 ->default(UserRole::USER);
             $table->enum('gender', array_column(Gender::cases(), 'value'))
-                ->default(Gender::UNDEFINED);
+                ->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('custom_link')->nullable()->unique();

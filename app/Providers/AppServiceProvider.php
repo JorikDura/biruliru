@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 
@@ -29,6 +30,7 @@ final class AppServiceProvider extends ServiceProvider
         $this->configureModels();
         $this->configureCommands();
         $this->bindUserLink();
+        $this->defineGates();
     }
 
     /**
@@ -67,6 +69,13 @@ final class AppServiceProvider extends ServiceProvider
                     $query->where('id', $value);
                 }
             )->orWhere('custom_link', $value)->firstOrFail();
+        });
+    }
+
+    public function defineGates(): void
+    {
+        Gate::define('isAdminOrModerator', static function (User $user): bool {
+            return $user->isModerator() || $user->isAdmin();
         });
     }
 }
