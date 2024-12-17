@@ -7,11 +7,13 @@ namespace App\Actions\V1\People;
 use App\Models\Person;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-final class IndexPeopleAction
+final readonly class IndexPeopleAction
 {
     public function __invoke(): LengthAwarePaginator
     {
-        return Person::paginate(columns: [
+        return Person::with([
+            'image'
+        ])->paginate(columns: [
             'id',
             'english_name',
             'russian_name',

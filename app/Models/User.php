@@ -7,6 +7,7 @@ namespace App\Models;
 use App\Enums\Gender;
 use App\Enums\UserRole;
 use App\Notifications\VerificationCodeNotification;
+use App\Traits\HasImage;
 use Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -17,9 +18,10 @@ use Laravel\Sanctum\HasApiTokens;
 final class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens;
-
     /** @use HasFactory<UserFactory> */
     use HasFactory;
+
+    use HasImage;
     use Notifiable;
 
     /**

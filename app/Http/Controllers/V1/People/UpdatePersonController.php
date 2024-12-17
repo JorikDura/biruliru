@@ -8,6 +8,8 @@ use App\Actions\V1\People\UpdatePersonAction;
 use App\Http\Requests\People\UpdatePersonRequest;
 use App\Http\Resources\PersonResource;
 use App\Models\Person;
+use App\Models\User;
+use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Support\Facades\Gate;
 
 final class UpdatePersonController
@@ -16,16 +18,18 @@ final class UpdatePersonController
      * @param  Person  $person
      * @param  UpdatePersonAction  $action
      * @param  UpdatePersonRequest  $request
+     * @param  User  $user
      * @return PersonResource
      */
     public function __invoke(
         Person $person,
         UpdatePersonAction $action,
-        UpdatePersonRequest $request
+        UpdatePersonRequest $request,
+        #[CurrentUser('sanctum')] User $user
     ) {
         Gate::authorize('isAdminOrModerator');
 
-        $person = $action($person, $request->validated());
+        $person = $action($user, $person, $request->validated());
 
         return PersonResource::make($person);
     }

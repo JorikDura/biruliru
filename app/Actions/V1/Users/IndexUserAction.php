@@ -7,7 +7,7 @@ namespace App\Actions\V1\Users;
 use App\Models\User;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-final class IndexUserAction
+final readonly class IndexUserAction
 {
     /**
      * Returns paginated users
@@ -16,7 +16,9 @@ final class IndexUserAction
      */
     public function __invoke(): LengthAwarePaginator
     {
-        return User::paginate(columns: [
+        return User::with([
+            'image'
+        ])->paginate(columns: [
             'id',
             'name'
         ])->appends(request()->query());

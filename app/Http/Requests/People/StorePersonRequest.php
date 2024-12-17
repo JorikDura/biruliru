@@ -17,6 +17,8 @@ final class StorePersonRequest extends FormRequest
             'date_of_birth' => ['nullable', 'date'],
             'date_of_death' => ['nullable', 'date'],
             'description' => ['nullable', 'string', 'min:3', 'max:255'],
+            'images' => ['nullable', 'array', 'min:1', 'max:8'],
+            'images.*' => ['nullable', 'image', 'mimes:jpeg,jpg,png,gif', 'max:24576'],
         ];
     }
 }
