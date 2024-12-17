@@ -9,7 +9,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Random\RandomException;
 
-class TestHelpers
+final class TestHelpers
 {
     private const int IMAGE_WIDTH = 600;
     private const int IMAGE_HEIGHT = 600;
@@ -22,7 +22,7 @@ class TestHelpers
         $files = [];
 
         for ($i = 1; $i < random_int($min, $max); $i++) {
-            $files[] = static::uploadFile("test_$i.jpg");
+            $files[] = self::uploadFile("test_$i.jpg");
         }
 
         return $files;
@@ -50,7 +50,7 @@ class TestHelpers
         return Storage::disk($disk)
             ->put(
                 path: $path,
-                contents: TestHelpers::uploadFile(
+                contents: self::uploadFile(
                     name: $name,
                     width: $width,
                     height: $height
