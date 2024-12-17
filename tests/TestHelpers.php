@@ -29,7 +29,7 @@ class TestHelpers
     }
 
     public static function uploadFile(
-        string $name,
+        string $name = 'test.jpg',
         int $width = self::IMAGE_WIDTH,
         int $height = self::IMAGE_HEIGHT
     ): File {
