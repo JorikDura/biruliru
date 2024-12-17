@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\Gender;
 use App\Enums\UserRole;
 use App\Notifications\VerificationCodeNotification;
 use Database\Factories\UserFactory;
@@ -72,14 +73,20 @@ final class User extends Authenticatable implements MustVerifyEmail
     /**
      * Get the attributes that should be cast.
      *
-     * @return array<string, string>
+     * @return array{
+     *     email_verified_at: 'datetime',
+     *     password: 'hashed',
+     *     role: 'App\Enums\UserRole',
+     *     gender: 'App\Enums\Gender'
+     * }
      */
     protected function casts(): array
     {
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
-            'role' => UserRole::class
+            'role' => UserRole::class,
+            'gender' => Gender::class,
         ];
     }
 }
