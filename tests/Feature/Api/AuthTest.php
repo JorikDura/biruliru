@@ -2,12 +2,17 @@
 
 declare(strict_types=1);
 
+use App\Models\Image;
 use App\Models\User;
 use App\Notifications\VerificationCodeNotification;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\Sanctum;
 use Symfony\Component\HttpFoundation\Response;
+use Tests\TestHelpers;
 
 use function Pest\Laravel\assertDatabaseHas;
+use function Pest\Laravel\assertDatabaseMissing;
+use function Pest\Laravel\deleteJson;
 use function Pest\Laravel\postJson;
 
 describe('auth api endpoints', function () {
@@ -95,5 +100,68 @@ describe('auth api endpoints', function () {
         Notification::assertSentTo($user, VerificationCodeNotification::class);
 
         Notification::assertCount(1);
+    });
+
+    it('store user image', function () {
+        Storage::fake('public');
+
+        /** @var User $user */
+        $user = User::factory()->create();
+
+        Sanctum::actingAs($user);
+
+        $test = postJson(
+            uri: 'api/v1/auth/images',
+            data: [
+                'image' => TestHelpers::uploadFile()
+            ]
+        )->assertSuccessful();
+
+        /** @var Image $image */
+        $image = $test->original;
+
+        assertDatabaseHas(
+            table: 'images',
+            data: $image->toArray()
+        );
+
+        Storage::disk('public')->assertExists([
+            $image->original_path,
+            $image->preview_path
+        ]);
+    });
+
+    it('delete user image', function () {
+        Storage::fake('public');
+
+        /** @var User $user */
+        $user = User::factory()->create();
+
+        $fakeImage = TestHelpers::storeFakeFiles(
+            path: 'images/users',
+            name: 'test.jpg'
+        );
+
+        $fakeImage = Image::factory()->create([
+            'user_id' => $user->id,
+            'imageable_id' => $user->id,
+            'imageable_type' => User::class,
+            'original_path' => $fakeImage
+        ]);
+
+        Storage::disk('public')->assertExists($fakeImage->original_path);
+
+        Sanctum::actingAs($user);
+
+        deleteJson(uri: 'api/v1/auth/images')
+            ->assertSuccessful()
+            ->assertNoContent();
+
+        Storage::disk('public')->assertMissing($fakeImage->original_path);
+
+        assertDatabaseMissing(
+            table: 'images',
+            data: $fakeImage->toArray()
+        );
     });
 });
