@@ -6,7 +6,6 @@ namespace Database\Factories;
 
 use App\Models\Image;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Carbon;
 
 final class ImageFactory extends Factory
 {
@@ -15,10 +14,10 @@ final class ImageFactory extends Factory
     public function definition(): array
     {
         return [
+            'imageable_id' => $this->faker->uuid(),
+            'imageable_type' => $this->faker->word(),
             'original_path' => $this->faker->word(),
-            'preview_path' => $this->faker->word(),
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
+            'preview_path' => $this->faker->word()
         ];
     }
 }
