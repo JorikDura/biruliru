@@ -15,9 +15,9 @@ final class ImageFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::factory(),
-            'imageable_id' => $this->faker->uuid(),
-            'imageable_type' => $this->faker->word(),
+            'user_id' => $user = User::factory()->create()->id,
+            'imageable_id' => $user,
+            'imageable_type' => User::class,
             'original_path' => $this->faker->word(),
             'preview_path' => $this->faker->word()
         ];
