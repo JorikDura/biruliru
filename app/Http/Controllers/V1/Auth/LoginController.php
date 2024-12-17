@@ -8,15 +8,22 @@ use App\Actions\V1\Auth\CreateTokenAction;
 use App\Actions\V1\Auth\LoginAction;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Resources\TokenResource;
+use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 final class LoginController
 {
+    /**
+     * @param  LoginRequest  $request
+     * @param  LoginAction  $loginAction
+     * @param  CreateTokenAction  $createTokenAction
+     * @return TokenResource|JsonResponse
+     */
     public function __invoke(
         LoginRequest $request,
         LoginAction $loginAction,
         CreateTokenAction $createTokenAction
-    ) {
+    ): TokenResource|JsonResponse {
         $user = $loginAction($request->validated());
 
         if (is_null($user)) {

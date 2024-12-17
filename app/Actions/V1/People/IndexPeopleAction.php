@@ -9,6 +9,11 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 final readonly class IndexPeopleAction
 {
+    /**
+     * Returns paginated people list
+     *
+     * @return LengthAwarePaginator
+     */
     public function __invoke(): LengthAwarePaginator
     {
         return Person::with([

@@ -9,7 +9,11 @@ use App\Models\User;
 
 final class ShowUserController
 {
-    public function __invoke(User $user)
+    /**
+     * @param  User  $user
+     * @return UserResource
+     */
+    public function __invoke(User $user): UserResource
     {
         return UserResource::make($user);
     }

@@ -17,6 +17,11 @@ final class VerifyEmailController
     ) {
     }
 
+    /**
+     * @param  VerifyEmailRequest  $request
+     * @param  VerifyEmailAction  $action
+     * @return Response
+     */
     public function __invoke(
         VerifyEmailRequest $request,
         VerifyEmailAction $action

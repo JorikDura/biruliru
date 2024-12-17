@@ -14,6 +14,8 @@ use ReflectionException;
 final readonly class StoreImageAction
 {
     /**
+     * Stores model image
+     *
      * @throws ReflectionException
      */
     public function __invoke(User $user, UploadedFile $file, ?Model $model = null): Image

@@ -17,7 +17,8 @@ final class ResendCodeVerificationController
     }
 
     /**
-     * Resends code for email verification
+     * @param  ResendCodeVerificationAction  $action
+     * @return Response
      */
     public function __invoke(ResendCodeVerificationAction $action): Response
     {

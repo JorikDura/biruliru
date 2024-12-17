@@ -10,6 +10,12 @@ use Symfony\Component\HttpFoundation\Response;
 
 final readonly class ResendCodeVerificationAction
 {
+    /**
+     * Resends code verification
+     *
+     * @param  User  $user
+     * @return void
+     */
     public function __invoke(User $user): void
     {
         abort_if(

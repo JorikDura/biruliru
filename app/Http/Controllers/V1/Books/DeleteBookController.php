@@ -2,23 +2,23 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\V1\People;
+namespace App\Http\Controllers\V1\Books;
 
-use App\Models\Person;
+use App\Models\Book;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
 
-final class DeletePersonController
+final class DeleteBookController
 {
     /**
-     * @param  Person  $person
+     * @param  Book  $book
      * @return Response
      */
-    public function __invoke(Person $person): Response
+    public function __invoke(Book $book): Response
     {
         Gate::authorize('isAdminOrModerator');
 
-        $person->delete();
+        $book->delete();
 
         return response()->noContent();
     }

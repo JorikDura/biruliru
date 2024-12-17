@@ -7,6 +7,7 @@ namespace App\Models;
 use App\Traits\HasImages;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 final class Person extends Model
 {
@@ -34,6 +35,11 @@ final class Person extends Model
         $this->deleteImages();
 
         return parent::delete();
+    }
+
+    public function books(): BelongsToMany
+    {
+        return $this->belongsToMany(Book::class);
     }
 
     /**

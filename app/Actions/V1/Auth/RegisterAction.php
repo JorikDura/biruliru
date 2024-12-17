@@ -9,6 +9,12 @@ use Illuminate\Auth\Events\Registered;
 
 final readonly class RegisterAction
 {
+    /**
+     * Registers user
+     *
+     * @param  array  $attributes
+     * @return User
+     */
     public function __invoke(array $attributes): User
     {
         $user = User::create($attributes);

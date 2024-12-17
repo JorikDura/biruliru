@@ -26,7 +26,7 @@ final class UpdatePersonController
         UpdatePersonAction $action,
         UpdatePersonRequest $request,
         #[CurrentUser('sanctum')] User $user
-    ) {
+    ): PersonResource {
         Gate::authorize('isAdminOrModerator');
 
         $person = $action($user, $person, $request->validated());
