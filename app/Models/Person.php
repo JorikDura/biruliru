@@ -20,7 +20,8 @@ final class Person extends Model
         'original_name',
         'date_of_birth',
         'date_of_death',
-        'description'
+        'english_description',
+        'russian_description'
     ];
 
     /**

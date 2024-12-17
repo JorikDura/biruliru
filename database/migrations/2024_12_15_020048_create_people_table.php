@@ -18,7 +18,8 @@ return new class extends Migration {
             $table->timestamp('date_of_birth')->nullable();
             $table->timestamp('date_of_death')->nullable();
             //$table->enum('role', array_column(PersonRole::cases(), 'value'));
-            $table->text('description')->nullable();
+            $table->text('english_description')->nullable();
+            $table->text('russian_description')->nullable();
         });
     }
 

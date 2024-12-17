@@ -20,7 +20,8 @@ final class PersonFactory extends Factory
             'original_name' => fake()->name,
             'date_of_birth' => Carbon::now(),
             'date_of_death' => Carbon::now(),
-            'description' => fake()->text()
+            'english_description' => fake()->text(),
+            'russian_description' => fake()->text()
         ];
     }
 }

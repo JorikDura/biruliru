@@ -25,7 +25,8 @@ final readonly class ShowPersonAction
             'original_name',
             'date_of_birth',
             'date_of_death',
-            'description',
+            'english_description',
+            'russian_description'
         ])->findOrFail($personId);
     }
 }

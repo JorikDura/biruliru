@@ -22,9 +22,10 @@ final class PersonResource extends JsonResource
             'original_name' => $this->original_name,
             'date_of_birth' => $this->whenHas('date_of_birth'),
             'date_of_death' => $this->whenHas('date_of_death'),
-            'description' => $this->whenHas('description'),
+            'english_description' => $this->whenHas('english_description'),
+            'russian_description' => $this->whenHas('russian_description'),
             'image' => ImageResource::make($this->whenLoaded('image')),
-            'images' => ImageResource::collection($this->whenLoaded('images')),
+            'images' => ImageResource::collection($this->whenLoaded('images'))
         ];
     }
 }

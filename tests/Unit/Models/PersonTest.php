@@ -15,6 +15,7 @@ it('person model to array', function () {
         'original_name',
         'date_of_birth',
         'date_of_death',
-        'description'
+        'english_description',
+        'russian_description'
     ]);
 });

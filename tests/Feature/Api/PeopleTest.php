@@ -61,7 +61,8 @@ describe('people api endpoints', function () {
                     'original_name',
                     'date_of_birth',
                     'date_of_death',
-                    'description'
+                    'english_description',
+                    'russian_description'
                 ]
             ])
             ->assertSee([
@@ -69,7 +70,8 @@ describe('people api endpoints', function () {
                 'russian_name' => $person->russian_name,
                 'english_name' => $person->english_name,
                 'original_name' => $person->original_name,
-                'description' => $person->description
+                'english_description' => $person->english_description,
+                'russian_description' => $person->russian_description
             ]);
     });
 
@@ -87,7 +89,8 @@ describe('people api endpoints', function () {
                     'original_name',
                     'date_of_birth',
                     'date_of_death',
-                    'description'
+                    'english_description',
+                    'russian_description'
                 ]
             ])
             ->assertSee([
@@ -95,7 +98,8 @@ describe('people api endpoints', function () {
                 'russian_name' => $person->russian_name,
                 'english_name' => $person->english_name,
                 'original_name' => $person->original_name,
-                'description' => $person->description
+                'english_description' => $person->english_description,
+                'russian_description' => $person->russian_description
             ]);
 
         assertDatabaseHas(
@@ -104,7 +108,8 @@ describe('people api endpoints', function () {
                 'russian_name' => $person->russian_name,
                 'english_name' => $person->english_name,
                 'original_name' => $person->original_name,
-                'description' => $person->description
+                'english_description' => $person->english_description,
+                'russian_description' => $person->russian_description
             ]
         );
     });
@@ -134,14 +139,16 @@ describe('people api endpoints', function () {
                 'original_name',
                 'date_of_birth',
                 'date_of_death',
-                'description'
+                'english_description',
+                'russian_description'
             ]
         ])->assertSee([
             'id' => $person->id,
             'russian_name' => $person->russian_name,
             'english_name' => $englishName,
             'original_name' => $person->original_name,
-            'description' => $person->description
+            'english_description' => $person->english_description,
+            'russian_description' => $person->russian_description
         ]);
 
         assertDatabaseHas(
@@ -151,7 +158,8 @@ describe('people api endpoints', function () {
                 'russian_name' => $person->russian_name,
                 'english_name' => $englishName,
                 'original_name' => $person->original_name,
-                'description' => $person->description
+                'english_description' => $person->english_description,
+                'russian_description' => $person->russian_description
             ]
         );
     });
