@@ -19,7 +19,7 @@ final class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->registerTelescope();
     }
 
     /**
@@ -77,5 +77,13 @@ final class AppServiceProvider extends ServiceProvider
         Gate::define('isAdminOrModerator', static function (User $user): bool {
             return $user->isModerator() || $user->isAdmin();
         });
+    }
+
+    public function registerTelescope(): void
+    {
+        if ($this->app->environment('local') && class_exists(\Laravel\Telescope\TelescopeServiceProvider::class)) {
+            $this->app->register(\Laravel\Telescope\TelescopeServiceProvider::class);
+            $this->app->register(TelescopeServiceProvider::class);
+        }
     }
 }
