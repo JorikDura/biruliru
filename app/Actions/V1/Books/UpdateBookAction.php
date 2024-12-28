@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace App\Actions\V1\Books;
 
+use App\Actions\V1\Descriptions\DeleteDescriptionsAction;
+use App\Actions\V1\Descriptions\UpdateDescriptionsAction;
+use App\Actions\V1\Names\DeleteNamesAction;
+use App\Actions\V1\Names\UpdateNamesAction;
 use App\Enums\PersonRole;
 use App\Models\Book;
 use App\Models\Image;
@@ -23,34 +27,56 @@ final readonly class UpdateBookAction
     public function __invoke(Book $book, User|int $user, array $attributes): Book
     {
         return DB::transaction(static function () use ($book, $user, $attributes) {
-            $authors = $attributes['author_ids'] ?? null;
-            $translators = $attributes['translator_ids'] ?? null;
-            $images = $attributes['images'] ?? null;
+            $attributes = fluent($attributes);
 
-            unset($attributes['images'], $attributes['translator_ids'], $attributes['author_ids']);
+            $book->update($attributes->only([
+                'date_of_publication',
+                'date_of_writing'
+            ]));
 
-            $book->update($attributes);
+            $attributes->whenHas(
+                key: 'names',
+                callback: fn ($names) => app(UpdateNamesAction::class)->__invoke($book, $names)
+            );
 
-            $book->people()->syncWithPivotValues($authors, [
+            $attributes->whenHas(
+                key: 'descriptions',
+                callback: fn ($descriptions) => app(UpdateDescriptionsAction::class)->__invoke($book, $descriptions)
+            );
+
+            $book->people()->syncWithPivotValues($attributes->get('author_ids'), [
                 'role' => PersonRole::AUTHOR
             ]);
 
-            $book->people()->syncWithPivotValues($translators, [
+            $book->people()->syncWithPivotValues($attributes->get('translator_ids'), [
                 'role' => PersonRole::TRANSLATOR
             ]);
 
-            if (!is_null($images)) {
-                Image::insert(
+            $attributes->whenHas(
+                key: 'images',
+                callback: fn ($images) => Image::insert(
                     files: $images,
                     model: $book,
                     user: $user
-                );
-            }
+                )
+            );
+
+            $attributes->whenHas(
+                key: 'delete_names_ids',
+                callback: fn ($namesToDelete) => app(DeleteNamesAction::class)->__invoke($book, $namesToDelete)
+            );
+
+            $attributes->whenHas(
+                key: 'delete_descriptions_ids',
+                callback: fn ($descriptions) => app(DeleteDescriptionsAction::class)->__invoke($book, $descriptions)
+            );
 
             return $book->load([
-                'authors:id,english_name,russian_name,original_name',
-                'translators:id,english_name,russian_name,original_name',
-                'images'
+                'authors:id' => ['names'],
+                'translators:id' => ['names'],
+                'images',
+                'names',
+                'descriptions'
             ]);
         });
     }

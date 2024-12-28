@@ -17,16 +17,13 @@ final readonly class ShowPersonAction
     public function __invoke(int $personId): Person
     {
         return Person::with([
-            'images'
+            'images',
+            'names',
+            'descriptions'
         ])->select([
             'id',
-            'english_name',
-            'russian_name',
-            'original_name',
             'date_of_birth',
-            'date_of_death',
-            'english_description',
-            'russian_description'
+            'date_of_death'
         ])->findOrFail($personId);
     }
 }

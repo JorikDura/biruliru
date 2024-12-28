@@ -4,25 +4,25 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Traits\HasDescriptions;
 use App\Traits\HasImages;
+use App\Traits\HasNames;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 final class Person extends Model
 {
+    use HasDescriptions;
     use HasFactory;
     use HasImages;
+    use HasNames;
 
     public $timestamps = false;
+
     protected $fillable = [
-        'english_name',
-        'russian_name',
-        'original_name',
         'date_of_birth',
-        'date_of_death',
-        'english_description',
-        'russian_description'
+        'date_of_death'
     ];
 
     /**
@@ -32,6 +32,10 @@ final class Person extends Model
      */
     public function delete(): ?bool
     {
+        $this->names()->delete();
+
+        $this->descriptions()->delete();
+
         $this->deleteImages();
 
         return parent::delete();

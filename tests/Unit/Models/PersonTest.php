@@ -8,14 +8,9 @@ it('person model to array', function () {
     /** @var Person $person */
     $person = Person::factory()->create()->fresh();
 
-    expect(array_keys($person->toArray()))->toEqual([
+    expect($person->toArray())->toHaveKeys([
         'id',
-        'english_name',
-        'russian_name',
-        'original_name',
         'date_of_birth',
-        'date_of_death',
-        'english_description',
-        'russian_description'
+        'date_of_death'
     ]);
 });

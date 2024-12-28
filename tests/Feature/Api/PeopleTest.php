@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Enums\UserRole;
+use App\Models\Name;
 use App\Models\Person;
 use App\Models\User;
 use Laravel\Sanctum\Sanctum;
@@ -32,18 +33,16 @@ describe('people api endpoints', function () {
                 'data' => [
                     [
                         'id',
-                        'russian_name',
-                        'english_name',
-                        'original_name'
+                        'names',
+                        'descriptions',
+                        'image'
                     ],
 
                 ]
             ])
             ->assertSee([
                 'id' => $person->id,
-                'russian_name' => $person->russian_name,
-                'english_name' => $person->english_name,
-                'original_name' => $person->original_name
+                'names' => $person->names,
             ]);
     });
 
@@ -56,22 +55,17 @@ describe('people api endpoints', function () {
             ->assertJsonStructure([
                 'data' => [
                     'id',
-                    'russian_name',
-                    'english_name',
-                    'original_name',
+                    'names',
                     'date_of_birth',
                     'date_of_death',
-                    'english_description',
-                    'russian_description'
+                    'descriptions',
+                    'images'
                 ]
             ])
             ->assertSee([
                 'id' => $person->id,
-                'russian_name' => $person->russian_name,
-                'english_name' => $person->english_name,
-                'original_name' => $person->original_name,
-                'english_description' => $person->english_description,
-                'russian_description' => $person->russian_description
+                'names' => $person->names,
+                'descriptions' => $person->descriptions
             ]);
     });
 
@@ -79,37 +73,43 @@ describe('people api endpoints', function () {
         /** @var Person $person */
         $person = Person::factory()->make();
 
-        postJson(uri: "api/v1/people", data: $person->toArray())
-            ->assertSuccessful()
-            ->assertJsonStructure([
-                'data' => [
-                    'id',
-                    'russian_name',
-                    'english_name',
-                    'original_name',
-                    'date_of_birth',
-                    'date_of_death',
-                    'english_description',
-                    'russian_description'
-                ]
-            ])
-            ->assertSee([
-                'id' => $person->id,
-                'russian_name' => $person->russian_name,
-                'english_name' => $person->english_name,
-                'original_name' => $person->original_name,
-                'english_description' => $person->english_description,
-                'russian_description' => $person->russian_description
-            ]);
+        $name = Name::factory()->make([
+            'nameable_id' => $person->id,
+            'nameable_type' => Person::class
+        ]);
+
+        $test = postJson(
+            uri: "api/v1/people",
+            data: $person->toArray() + [
+                'names' => [
+                    [
+                        'name' => $name->name,
+                        'language' => $name->language
+                    ]
+                ],
+            ]
+        )->assertSuccessful()->assertJsonStructure([
+            'data' => [
+                'id',
+                'names',
+                'date_of_birth',
+                'date_of_death',
+                'descriptions',
+                'images'
+            ]
+        ])->assertSee([
+            'id' => $person->id,
+            'names' => $person->names,
+            'descriptions' => $person->descriptions
+        ]);
+
+        /** @var Person $person */
+        $person = $test->original;
 
         assertDatabaseHas(
             table: 'people',
             data: [
-                'russian_name' => $person->russian_name,
-                'english_name' => $person->english_name,
-                'original_name' => $person->original_name,
-                'english_description' => $person->english_description,
-                'russian_description' => $person->russian_description
+                'id' => $person->id
             ]
         );
     });
@@ -118,10 +118,24 @@ describe('people api endpoints', function () {
         /** @var Person $person */
         $person = Person::factory()->make();
 
+        $name = Name::factory()->make([
+            'nameable_id' => $person->id,
+            'nameable_type' => Person::class
+        ]);
+
         Sanctum::actingAs($this->simpleUser);
 
-        postJson(uri: "api/v1/people", data: $person->toArray())
-            ->assertForbidden();
+        postJson(
+            uri: "api/v1/people",
+            data: $person->toArray() + [
+                'names' => [
+                    [
+                        'name' => $name->name,
+                        'language' => $name->language
+                    ]
+                ],
+            ]
+        )->assertForbidden();
     });
 
     it('edit person', function () {
@@ -129,37 +143,26 @@ describe('people api endpoints', function () {
         $person = $this->people->random();
 
         postJson(uri: "api/v1/people/$person->id", data: [
-            '_method' => 'PUT',
-            'english_name' => $englishName = fake()->name(),
+            '_method' => 'PUT'
         ])->assertSuccessful()->assertJsonStructure([
             'data' => [
                 'id',
-                'russian_name',
-                'english_name',
-                'original_name',
+                'names',
                 'date_of_birth',
                 'date_of_death',
-                'english_description',
-                'russian_description'
+                'descriptions',
+                'images'
             ]
         ])->assertSee([
             'id' => $person->id,
-            'russian_name' => $person->russian_name,
-            'english_name' => $englishName,
-            'original_name' => $person->original_name,
-            'english_description' => $person->english_description,
-            'russian_description' => $person->russian_description
+            'names' => $person->names,
+            'descriptions' => $person->descriptions
         ]);
 
         assertDatabaseHas(
             table: 'people',
             data: [
-                'id' => $person->id,
-                'russian_name' => $person->russian_name,
-                'english_name' => $englishName,
-                'original_name' => $person->original_name,
-                'english_description' => $person->english_description,
-                'russian_description' => $person->russian_description
+                'id' => $person->id
             ]
         );
     });
@@ -171,8 +174,7 @@ describe('people api endpoints', function () {
         Sanctum::actingAs($this->simpleUser);
 
         postJson(uri: "api/v1/people/$person->id", data: [
-            '_method' => 'PUT',
-            'english_name' => fake()->name(),
+            '_method' => 'PUT'
         ])->assertForbidden();
     });
 

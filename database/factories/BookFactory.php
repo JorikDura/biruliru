@@ -15,13 +15,8 @@ final class BookFactory extends Factory
     public function definition(): array
     {
         return [
-            'english_name' => $this->faker->name(),
-            'russian_name' => $this->faker->name(),
-            'original_name' => $this->faker->name(),
             'date_of_publication' => Carbon::now(),
-            'date_of_writing' => Carbon::now(),
-            'english_description' => $this->faker->text(),
-            'russian_description' => $this->faker->text()
+            'date_of_writing' => Carbon::now()
         ];
     }
 }

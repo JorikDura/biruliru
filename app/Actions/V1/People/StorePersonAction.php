@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Actions\V1\People;
 
+use App\Actions\V1\Descriptions\StoreDescriptionsAction;
+use App\Actions\V1\Names\StoreNamesAction;
 use App\Models\Image;
 use App\Models\Person;
 use App\Models\User;
@@ -21,21 +23,34 @@ final readonly class StorePersonAction
     public function __invoke(User|int $user, array $attributes): Person
     {
         return DB::transaction(static function () use ($attributes, $user) {
-            $images = $attributes['images'] ?? null;
+            $attributes = fluent($attributes);
 
-            unset($attributes['images']);
+            $person = Person::create($attributes->only([
+                'date_of_birth',
+                'date_of_death'
+            ]));
 
-            $person = Person::create($attributes);
+            app(StoreNamesAction::class)->__invoke($person, $attributes->get('names'));
 
-            if (!is_null($images)) {
-                Image::insert(
+            $attributes->whenHas(
+                key: 'descriptions',
+                callback: fn ($descriptions) => app(StoreDescriptionsAction::class)->__invoke($person, $descriptions)
+            );
+
+            $attributes->whenHas(
+                key: 'images',
+                callback: fn ($images) => Image::insert(
                     files: $images,
                     model: $person,
                     user: $user
-                );
-            }
+                )
+            );
 
-            return $person->load(['images']);
+            return $person->load([
+                'images',
+                'names',
+                'descriptions'
+            ]);
         });
     }
 }

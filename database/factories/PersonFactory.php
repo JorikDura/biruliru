@@ -15,13 +15,8 @@ final class PersonFactory extends Factory
     public function definition(): array
     {
         return [
-            'english_name' => fake()->name,
-            'russian_name' => fake()->name,
-            'original_name' => fake()->name,
             'date_of_birth' => Carbon::now(),
-            'date_of_death' => Carbon::now(),
-            'english_description' => fake()->text(),
-            'russian_description' => fake()->text()
+            'date_of_death' => Carbon::now()
         ];
     }
 }

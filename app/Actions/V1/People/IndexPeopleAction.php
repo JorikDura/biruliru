@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace App\Actions\V1\People;
 
+use App\Filters\NameFilter;
 use App\Models\Person;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 
 final readonly class IndexPeopleAction
 {
@@ -16,13 +19,14 @@ final readonly class IndexPeopleAction
      */
     public function __invoke(): LengthAwarePaginator
     {
-        return Person::with([
-            'image'
-        ])->paginate(columns: [
-            'id',
-            'english_name',
-            'russian_name',
-            'original_name'
-        ])->appends(request()->query());
+        return QueryBuilder::for(Person::class)
+            ->allowedFilters([
+                AllowedFilter::custom('name', new NameFilter()),
+            ])
+            ->with(['image', 'names', 'descriptions'])
+            ->paginate(columns: [
+                'id'
+            ])
+            ->appends(request()->query());
     }
 }

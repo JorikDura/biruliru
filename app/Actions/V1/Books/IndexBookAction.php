@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace App\Actions\V1\Books;
 
+use App\Filters\NameFilter;
 use App\Models\Book;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 
 final readonly class IndexBookAction
 {
@@ -16,12 +19,13 @@ final readonly class IndexBookAction
      */
     public function __invoke(): LengthAwarePaginator
     {
-        return Book::with(['image', 'authors'])
+        return QueryBuilder::for(Book::class)
+            ->allowedFilters([
+                AllowedFilter::custom('name', new NameFilter())
+            ])
+            ->with(['image', 'authors' => ['names'], 'names'])
             ->paginate(columns: [
                 'id',
-                'english_name',
-                'russian_name',
-                'original_name',
                 'date_of_publication',
                 'date_of_writing'
             ])

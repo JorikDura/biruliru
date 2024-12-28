@@ -17,13 +17,10 @@ final class PersonResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'english_name' => $this->english_name,
-            'russian_name' => $this->russian_name,
-            'original_name' => $this->original_name,
+            'names' => NameResource::collection($this->whenLoaded('names')),
             'date_of_birth' => $this->whenHas('date_of_birth'),
             'date_of_death' => $this->whenHas('date_of_death'),
-            'english_description' => $this->whenHas('english_description'),
-            'russian_description' => $this->whenHas('russian_description'),
+            'descriptions' => DescriptionResource::collection($this->whenLoaded('descriptions')),
             'image' => ImageResource::make($this->whenLoaded('image')),
             'images' => ImageResource::collection($this->whenLoaded('images'))
         ];

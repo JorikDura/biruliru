@@ -16,18 +16,18 @@ final readonly class ShowBookAction
      */
     public function __invoke(int $bookId): Book
     {
-        return Book::with(['images', 'authors', 'translators'])
-            ->select(
-                [
-                    'id',
-                    'english_name',
-                    'russian_name',
-                    'original_name',
-                    'date_of_publication',
-                    'date_of_writing',
-                    'english_description',
-                    'russian_description'
-                ]
-            )->findOrFail($bookId);
+        return Book::with([
+            'images',
+            'authors' => ['names'],
+            'translators' => ['names'],
+            'names',
+            'descriptions'
+        ])->select(
+            [
+                'id',
+                'date_of_publication',
+                'date_of_writing'
+            ]
+        )->findOrFail($bookId);
     }
 }

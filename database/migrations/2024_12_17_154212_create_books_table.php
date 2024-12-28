@@ -11,13 +11,8 @@ return new class extends Migration {
     {
         Schema::create('books', function (Blueprint $table) {
             $table->id();
-            $table->string('english_name');
-            $table->string('russian_name');
-            $table->string('original_name');
             $table->timestamp('date_of_publication');
             $table->timestamp('date_of_writing');
-            $table->text('english_description')->nullable();
-            $table->text('russian_description')->nullable();
         });
     }
 

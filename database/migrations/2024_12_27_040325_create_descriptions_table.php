@@ -9,15 +9,16 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        Schema::create('people', function (Blueprint $table) {
+        Schema::create('descriptions', function (Blueprint $table) {
             $table->id();
-            $table->timestamp('date_of_birth')->nullable();
-            $table->timestamp('date_of_death')->nullable();
+            $table->morphs('descriptionable');
+            $table->string('language');
+            $table->text('text');
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('people');
+        Schema::dropIfExists('descriptions');
     }
 };

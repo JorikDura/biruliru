@@ -15,13 +15,10 @@ final class BookResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'english_name' => $this->english_name,
-            'russian_name' => $this->russian_name,
-            'original_name' => $this->original_name,
+            'names' => NameResource::collection($this->whenLoaded('names')),
             'date_of_publication' => $this->date_of_publication,
             'date_of_writing' => $this->date_of_writing,
-            'english_description' => $this->whenHas('english_description'),
-            'russian_description' => $this->whenHas('russian_description'),
+            'descriptions' => DescriptionResource::collection($this->whenLoaded('descriptions')),
             'authors' => PersonResource::collection($this->whenLoaded('authors')),
             'translators' => PersonResource::collection($this->whenLoaded('translators')),
             'image' => ImageResource::make($this->whenLoaded('image')),
